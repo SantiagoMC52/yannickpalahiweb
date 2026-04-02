@@ -1,4 +1,6 @@
 ---
+import '../../styles/global.css';
+
 import astroLogo from '../assets/astro.svg';
 import background from '../assets/background.svg';
 ---
@@ -6,10 +8,6 @@ import background from '../assets/background.svg';
 <div id="container">
 	<img id="background" src={background.src} alt="" fetchpriority="high" />
 	<main>
-		
-		
-		
-		
 		<section id="hero">
 			<a href="https://astro.build"
 				><img
@@ -19,10 +17,7 @@ import background from '../assets/background.svg';
 					alt="Astro Homepage"
 				/></a
 			>
-			<h1>
-				To get started, open the <code><pre>src/pages</pre></code> directory
-				in your project.
-			</h1>
+			<h1 class="text-3xl font-bold underline">TEST TAILWIND</h1>
 			<section id="links">
 				<a class="button" href="https://docs.astro.build"
 					>Read our docs</a
