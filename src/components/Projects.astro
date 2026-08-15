@@ -1,16 +1,59 @@
 ---
 import { PROJECTS } from '../data/projects';
+
+// Cycles through 4 screen quadrants so the preview never overlaps the list,
+// however many projects get added later (the original hardcoded 4 nth-of-type rules).
+const QUADRANTS = [
+	'top-[26%] left-[24.5%]',
+	'top-[34%] left-[86.5%]',
+	'top-[83%] left-[20%]',
+	'top-[83%] left-[82%]'
+];
+
+// Per-project preview thumbnail size, from the design spec (px).
+const SIZES = ['w-70 h-39', 'w-70 h-39', 'w-70 h-39', 'w-67 h-48'];
 ---
 
-<section>
-	<h1>Projects</h1>
-	<ul>
+<section class="flex flex-1 flex-col items-center justify-center">
+	<ul
+		class="flex w-[80%] flex-wrap items-center justify-center gap-x-3 text-center text-[50px] leading-none lg:text-[75px]"
+	>
 		{
-			PROJECTS.map(project => (
-				<li>
-					<a href={`/projects/${project.slug}`}>{project.title}</a>
-				</li>
-			))
+			PROJECTS.map((project, index) => {
+				const isLast = index === PROJECTS.length - 1;
+				// Force a line break every 2 projects instead of leaving it to the
+				// available width, so the grouping stays put across viewport sizes.
+				const breaksLine = index % 2 === 1 && !isLast;
+
+				return (
+					<>
+						<li class="group relative">
+							<a
+								href={`/projects/${project.slug}`}
+								class="font-heading text-zinc-900 hover:opacity-50"
+							>
+								{`${project.name}${isLast ? '' : ','}`}
+							</a>
+							<img
+								src={project.image}
+								alt=""
+								class:list={[
+									'pointer-events-none fixed z-10 hidden -translate-x-1/2 -translate-y-1/2 lg:block',
+									// Unpublished projects use a "coming soon" banner instead of a still —
+									// contain it instead of cropping so the text stays legible.
+									project.title ? 'object-cover' : 'object-contain bg-black',
+									'opacity-0 transition-opacity duration-200 group-hover:opacity-100',
+									QUADRANTS[index % QUADRANTS.length],
+									SIZES[index % SIZES.length]
+								]}
+							/>
+						</li>
+						{breaksLine && (
+							<li class="basis-full" aria-hidden="true" />
+						)}
+					</>
+				);
+			})
 		}
 	</ul>
 </section>
