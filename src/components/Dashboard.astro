@@ -1,1 +1,20 @@
-<div>This is the Dashboard section.</div>
+---
+import introVideo from '../assets/video/intro.mp4';
+---
+
+<video
+	autoplay
+	loop
+	muted
+	playsinline
+	class="fixed inset-0 -z-10 hidden h-full w-full object-cover md:block"
+>
+	<source src={introVideo} type="video/mp4" />
+</video>
+
+<section class="flex flex-1 flex-col items-center justify-center gap-2 text-center">
+	<p class="font-heading text-[45px] leading-none md:text-[105px]">yannick palahí</p>
+	<p class="font-heading text-[30px] leading-none md:w-175 md:text-right md:text-[37px]">
+		art department
+	</p>
+</section>
