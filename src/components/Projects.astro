@@ -1,0 +1,16 @@
+---
+import { PROJECTS } from '../data/projects';
+---
+
+<section>
+	<h1>Projects</h1>
+	<ul>
+		{
+			PROJECTS.map(project => (
+				<li>
+					<a href={`/projects/${project.slug}`}>{project.title}</a>
+				</li>
+			))
+		}
+	</ul>
+</section>

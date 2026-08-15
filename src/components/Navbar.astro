@@ -1,0 +1,20 @@
+---
+const NAVBAR_ITEMS = [
+	{ id: '/', title: 'YP' },
+	{ id: '/projects', title: 'Projects' },
+	{ id: '/aboutme', title: 'About' },
+	{ id: '/contact', title: 'Contact' }
+];
+---
+
+<nav class="flex">
+	<ul class="flex gap-4">
+		{
+			NAVBAR_ITEMS.map(item => (
+				<li>
+					<a href={item.id}>{item.title}</a>
+				</li>
+			))
+		}
+	</ul>
+</nav>
