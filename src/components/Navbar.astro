@@ -1,20 +1,72 @@
 ---
+interface Props {
+	theme?: 'light' | 'dark';
+}
+
+const { theme = 'light' } = Astro.props as Props;
+
 const NAVBAR_ITEMS = [
-	{ id: '/', title: 'YP' },
-	{ id: '/projects', title: 'Projects' },
-	{ id: '/aboutme', title: 'About' },
-	{ id: '/contact', title: 'Contact' }
+	{ href: '/', title: 'YP' },
+	{ href: '/projects', title: 'projects' },
+	{ href: '/aboutme', title: 'about' },
+	{ href: '/contact', title: 'contact' }
 ];
+
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? currentPath === '/' : currentPath.startsWith(href));
+
+const linkColor = theme === 'dark' ? 'text-white' : 'text-zinc-900';
 ---
 
-<nav class="flex">
-	<ul class="flex gap-4">
+<div class="group relative flex items-center justify-between px-5 pt-6.75 sm:px-8 lg:px-19.5">
+	<a href="/" class:list={['font-heading text-[18px]', linkColor, isActive('/') && 'opacity-50']}>
+		YP
+	</a>
+
+	<nav class="hidden gap-9.5 sm:flex lg:gap-37.75">
 		{
-			NAVBAR_ITEMS.map(item => (
-				<li>
-					<a href={item.id}>{item.title}</a>
-				</li>
+			NAVBAR_ITEMS.slice(1).map((item) => (
+				<a
+					href={item.href}
+					class:list={['font-sans text-[18px]', linkColor, isActive(item.href) && 'opacity-50']}
+				>
+					{item.title}
+				</a>
 			))
 		}
-	</ul>
-</nav>
+	</nav>
+
+	<input id="nav-toggle" type="checkbox" class="hidden" aria-hidden="true" />
+	<label
+		for="nav-toggle"
+		class="relative z-20 flex h-6 w-6 cursor-pointer flex-col justify-center gap-1.5 sm:hidden"
+		aria-label="Toggle menu"
+	>
+		<span
+			class:list={[
+				'h-px w-full transition-transform duration-300',
+				theme === 'dark' ? 'bg-white' : 'bg-zinc-900',
+				'group-has-checked:translate-y-[3.5px] group-has-checked:rotate-45'
+			]}
+		/>
+		<span
+			class:list={[
+				'h-px w-full transition-transform duration-300',
+				theme === 'dark' ? 'bg-white' : 'bg-zinc-900',
+				'group-has-checked:-translate-y-[3.5px] group-has-checked:-rotate-45'
+			]}
+		/>
+	</label>
+
+	<nav
+		class="fixed inset-0 z-10 hidden flex-col items-center justify-center gap-8 bg-black/95 text-white group-has-checked:flex sm:hidden"
+	>
+		{
+			NAVBAR_ITEMS.map((item) => (
+				<a href={item.href} class:list={['font-sans text-2xl', isActive(item.href) && 'opacity-50']}>
+					{item.title}
+				</a>
+			))
+		}
+	</nav>
+</div>
