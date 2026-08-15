@@ -1,5 +1,8 @@
 ---
 import introVideo from '../assets/video/intro.mp4';
+
+// Keep in sync with the `md:` breakpoint used to reveal the video below.
+const DESKTOP_QUERY = '(min-width: 48rem)';
 ---
 
 <video
@@ -7,10 +10,10 @@ import introVideo from '../assets/video/intro.mp4';
 	loop
 	muted
 	playsinline
-	class="fixed inset-0 -z-10 hidden h-full w-full object-cover md:block"
->
-	<source src={introVideo} type="video/mp4" />
-</video>
+	preload="none"
+	data-src={introVideo}
+	data-query={DESKTOP_QUERY}
+	class="fixed inset-0 -z-10 hidden h-full w-full object-cover md:block"></video>
 
 <section class="flex flex-1 flex-col items-center justify-center gap-2 text-center">
 	<p class="font-heading text-[45px] leading-none md:text-[105px]">yannick palahí</p>
@@ -18,3 +21,27 @@ import introVideo from '../assets/video/intro.mp4';
 		art department
 	</p>
 </section>
+
+<script>
+	// The video is decorative and only rendered from `md` up, so its source is
+	// attached from JS instead of markup: phones never download the file, rather
+	// than relying on `display: none` to skip the fetch (which browsers do not
+	// guarantee). Loads on demand if the viewport later grows past the breakpoint.
+	const video = document.querySelector<HTMLVideoElement>('video[data-src]');
+	const src = video?.dataset.src;
+	const query = video?.dataset.query;
+
+	if (video && src && query) {
+		const desktop = window.matchMedia(query);
+
+		const load = () => {
+			if (video.src) return;
+			video.src = src;
+			// Autoplay can be rejected despite `muted`; the page reads fine without it.
+			video.play().catch(() => {});
+		};
+
+		if (desktop.matches) load();
+		desktop.addEventListener('change', (event) => event.matches && load());
+	}
+</script>
