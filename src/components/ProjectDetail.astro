@@ -1,8 +1,52 @@
 ---
-const { project } = Astro.props;
+import { CREDITS, type Project } from '../data/projects';
+
+interface Props {
+	project: Project;
+}
+
+const { project } = Astro.props as Props;
+const isPublished = Boolean(project.title);
+
+const credits = CREDITS.filter(({ key }) => project[key]).map(({ key, label }) => label(project[key] as string));
 ---
 
-<section>
-	<h1>{project.title}</h1>
-	<p>{project.description}</p>
-</section>
+{
+	isPublished ? (
+		<section class="flex flex-1 flex-col items-center justify-center gap-8 py-8 lg:gap-14 lg:py-0">
+			<h1 class="font-heading px-2 text-center text-[30px] leading-tight sm:text-[46px] lg:text-[75px]">
+				{project.title}
+			</h1>
+
+			<div class="flex w-full flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center lg:gap-8.75">
+				{project.link && (
+					<iframe
+						class="aspect-video w-full lg:max-w-190 lg:min-w-0 lg:flex-1"
+						src={project.link}
+						title={project.title}
+						allowfullscreen
+					/>
+				)}
+
+				<div class="flex w-full flex-col gap-5 text-[17px] leading-tight sm:text-[19px] lg:w-100 lg:shrink-0 lg:text-[20px]">
+					<div class="flex flex-col">
+						<span>{project.type}</span>
+						<span>{project.year}</span>
+					</div>
+
+					{project.description && <p class="lg:max-w-67.5">{project.description}</p>}
+
+					<ul class="flex flex-col">
+						{credits.map((line) => (
+							<li>{line}</li>
+						))}
+					</ul>
+				</div>
+			</div>
+		</section>
+	) : (
+		<section class="flex flex-1 items-center justify-center">
+			<h1 class="text-center text-[32px] sm:text-[42px] lg:text-[50px]">COMING SOON...</h1>
+		</section>
+	)
+}

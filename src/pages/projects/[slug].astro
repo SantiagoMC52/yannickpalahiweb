@@ -11,8 +11,15 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
+
+const title = project.title ?? `${project.name} | yannick palahí`;
+const description =
+	project.description ??
+	(project.title
+		? `${project.title} — ${project.type}, ${project.year}. Art department by Yannick Palahí.`
+		: `${project.name} — coming soon. Art department by Yannick Palahí.`);
 ---
 
-<Layout title={project.title}>
+<Layout title={title} description={description}>
 	<ProjectDetail project={project} />
 </Layout>
