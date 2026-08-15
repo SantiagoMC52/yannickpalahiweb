@@ -1,40 +1,54 @@
 ---
 import Navbar from '../components/Navbar.astro';
+import '../styles/global.css';
 
 interface Props {
 	title?: string;
+	description?: string;
+	/** `dark` renders a black page with white text (Dashboard, Contact). */
+	theme?: 'light' | 'dark';
 }
 
-const { title = 'yannick palahi | art department' } = Astro.props as Props;
+const {
+	title = 'yannick palahí | art department',
+	description = 'Yannick Palahí — art department for music videos, short films and advertisments. Based in Girona.',
+	theme = 'light'
+} = Astro.props as Props;
+const isDark = theme === 'dark';
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
+
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="theme-color" content={isDark ? '#000000' : '#fafaf9'} />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL('/apple-touch-icon.png', Astro.url)} />
+		<meta name="twitter:card" content="summary" />
+
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 	</head>
 	<body
-		class="min-h-screen bg-stone-50 text-zinc-900 antialiased selection:bg-zinc-900 selection:text-stone-100"
+		class:list={[
+			'flex min-h-screen flex-col font-sans antialiased',
+			isDark
+				? 'bg-black text-white selection:bg-white selection:text-black'
+				: 'bg-stone-50 text-zinc-900 selection:bg-zinc-900 selection:text-stone-100'
+		]}
 	>
-		<Navbar />
-		<main
-			class="mx-auto w-full max-w-6xl px-5 pb-16 pt-10 sm:px-8 lg:px-10"
-		>
+		<Navbar theme={theme} />
+		<main class="mx-auto flex w-full max-w-480 flex-1 flex-col px-5 pb-16 sm:px-8 lg:px-10">
 			<slot />
 		</main>
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		min-height: 100%;
-	}
-</style>
